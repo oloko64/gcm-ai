@@ -7,6 +7,7 @@ pub struct OpenAi {
 }
 
 impl OpenAi {
+    #[must_use]
     pub fn new(api_key: impl Into<String>) -> Self {
         OpenAi {
             api_key: api_key.into(),

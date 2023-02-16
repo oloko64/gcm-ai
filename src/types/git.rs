@@ -7,7 +7,6 @@ pub struct GitDiff {
 }
 
 impl GitDiff {
-    #[must_use]
     pub fn new() -> Result<GitDiff, Box<dyn Error>> {
         let output = Command::new("git")
             .args(["diff", "--cached", "--name-only"])
