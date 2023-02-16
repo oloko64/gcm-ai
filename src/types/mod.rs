@@ -1,3 +1,4 @@
-pub mod arg_parser;
-pub mod completion;
-pub mod git;
+pub(crate) mod arg_parser;
+pub(crate) mod completion;
+pub(crate) mod git;
+pub(crate) mod openai;

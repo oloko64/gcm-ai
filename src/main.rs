@@ -2,11 +2,13 @@ use std::env;
 use std::error::Error;
 use std::process::Command;
 
+mod types;
+
 use dotenvy::dotenv;
-use openai_rs::types::arg_parser::Args;
-use openai_rs::types::completion::CompletionBody;
-use openai_rs::types::git::GitDiff;
-use openai_rs::OpenAi;
+use types::arg_parser::Args;
+use types::completion::CompletionBody;
+use types::git::GitDiff;
+use types::openai::OpenAi;
 
 /// Generate commit messages using `OpenAI`'s GPT-3 API
 
@@ -58,7 +60,6 @@ async fn generate_commit_message(
     let openai = OpenAi::new(api_key);
     let config = config
         .prompt(vec![format!("Write an insightful but concise Git commit message in a complete sentence in present tense for the following diff without prefacing it with anything: {}", git_diff.get_diff())]);
-
 
     let data = openai.create_completion(config).await?;
 
