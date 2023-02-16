@@ -32,7 +32,11 @@ impl OpenAi {
             .await?;
 
         if !response.status().is_success() {
-            return Err(format!("Request failed: {:#?}", response.text().await?).into());
+            return Err(format!(
+                "Request failed: {:#?}",
+                response.json::<serde_json::Value>().await?["error"]
+            )
+            .into());
         }
 
         let response = response.json::<serde_json::Value>().await?;
