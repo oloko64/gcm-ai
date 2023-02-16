@@ -62,20 +62,23 @@ async fn generate_commit_message(
         return Err("Diff is too large".into());
     }
 
-    let api_key = match AppConfig::try_get() {
-        Ok(config) => {
-            if config.api_key.is_empty() {
-                println!("{}", "No API key configured, please run `openai-rs --config`".bright_red());
-                exit(1);
-            }
-            config.api_key
-        }
-        Err(_) => {
-            println!("{}", "No API key configured, please run `openai-rs --config`".bright_red());
-            exit(1);
-        }
+    let Ok(app_config) = AppConfig::try_get() else {
+        println!(
+            "{}",
+            "No API key configured, please run `openai-rs --config`".bright_red()
+        );
+        exit(1);
     };
-    let openai = OpenAi::new(api_key);
+
+    if app_config.api_key.is_empty() {
+        println!(
+            "{}",
+            "No API key configured, please run `openai-rs --config`".bright_red()
+        );
+        exit(1);
+    }
+
+    let openai = OpenAi::new(app_config.api_key);
     let config = config
         .prompt(vec![format!("Write an insightful but concise Git commit message in a complete sentence in present tense for the following diff without prefacing it with anything: {}", git_diff.get_diff())]);
 

@@ -1,7 +1,7 @@
 use confy::ConfyError;
 use serde::{Deserialize, Serialize};
 
-const APP_NAME: &'static str = env!("CARGO_PKG_NAME");
+const APP_NAME: &str = env!("CARGO_PKG_NAME");
 
 #[derive(Default, Debug, Serialize, Deserialize)]
 pub struct AppConfig {
@@ -9,7 +9,6 @@ pub struct AppConfig {
 }
 
 impl AppConfig {
-    #[must_use]
     pub fn try_set(api_key: impl Into<String>) -> Result<Self, ConfyError> {
         let config: Self = AppConfig {
             api_key: api_key.into(),
@@ -25,7 +24,6 @@ impl AppConfig {
         Ok(config)
     }
 
-    #[must_use]
     pub fn try_get() -> Result<Self, ConfyError> {
         let config: Self = confy::load(APP_NAME, None)?;
         Ok(config)
