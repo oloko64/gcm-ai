@@ -1,4 +1,5 @@
 use confy::ConfyError;
+use owo_colors::OwoColorize;
 use serde::{Deserialize, Serialize};
 
 const APP_NAME: &str = env!("CARGO_PKG_NAME");
@@ -17,8 +18,12 @@ impl AppConfig {
         confy::store(APP_NAME, None, &config)?;
 
         println!(
-            "Successfully set the API key at {}\n",
-            confy::get_configuration_file_path(APP_NAME, None)?.to_string_lossy()
+            "{}",
+            format!(
+                "Successfully set the API key at {}\n",
+                confy::get_configuration_file_path(APP_NAME, None)?.to_string_lossy()
+            )
+            .bright_green()
         );
 
         Ok(config)
