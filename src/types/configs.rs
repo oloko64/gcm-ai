@@ -1,7 +1,7 @@
 use confy::ConfyError;
 use serde::{Deserialize, Serialize};
 
-const APP_NAME: &'static str = "openai-rs";
+const APP_NAME: &'static str = env!("CARGO_PKG_NAME");
 
 #[derive(Default, Debug, Serialize, Deserialize)]
 pub struct AppConfig {
