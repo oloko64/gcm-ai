@@ -1,10 +1,9 @@
-use std::env;
+use owo_colors::OwoColorize;
 use std::error::Error;
 use std::io::Write;
 use std::process::{exit, Command};
 
 mod types;
-
 use types::arg_parser::Args;
 use types::completion::CompletionBody;
 use types::configs::AppConfig;
@@ -45,7 +44,7 @@ async fn main() {
 
     match generate_commit_message(config, git_diff).await {
         Ok(commit_message) => {
-            println!("{commit_message}");
+            println!("\n{}", commit_message.bright_green());
             std::process::exit(0);
         }
         Err(err) => {
@@ -66,13 +65,13 @@ async fn generate_commit_message(
     let api_key = match AppConfig::try_get() {
         Ok(config) => {
             if config.api_key.is_empty() {
-                println!("No API key configured, please run `openai-rs --config`");
+                println!("{}", "No API key configured, please run `openai-rs --config`".bright_red());
                 exit(1);
             }
             config.api_key
         }
         Err(_) => {
-            println!("No API key configured, please run `openai-rs --config`");
+            println!("{}", "No API key configured, please run `openai-rs --config`".bright_red());
             exit(1);
         }
     };
