@@ -1,4 +1,3 @@
-use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -52,85 +51,102 @@ pub struct CompletionBody {
 }
 
 impl CompletionBody {
+    #[must_use]
     pub fn new() -> Self {
         Self::default()
     }
 
+    #[must_use]
     pub fn model(mut self, model: impl Into<String>) -> Self {
         self.model = model.into();
         self
     }
 
+    #[must_use]
     pub fn prompt(mut self, prompt: impl Into<Vec<String>>) -> Self {
         self.prompt = Some(prompt.into());
         self
     }
 
+    #[must_use]
     pub fn suffix(mut self, suffix: impl Into<String>) -> Self {
         self.suffix = Some(suffix.into());
         self
     }
 
+    #[must_use]
     pub fn max_tokens(mut self, max_tokens: u16) -> Self {
         self.max_tokens = Some(max_tokens);
         self
     }
 
+    #[must_use]
     pub fn temperature(mut self, temperature: f32) -> Self {
         self.temperature = Some(temperature);
         self
     }
 
+    #[must_use]
     pub fn top_p(mut self, top_p: f32) -> Self {
         self.top_p = Some(top_p);
         self
     }
 
+    #[must_use]
     pub fn n(mut self, n: u16) -> Self {
         self.n = Some(n);
         self
     }
 
+    #[must_use]
     pub fn stream(mut self, stream: bool) -> Self {
         self.stream = Some(stream);
         self
     }
 
+    #[must_use]
     pub fn logprobs(mut self, logprobs: u16) -> Self {
         self.logprobs = Some(logprobs);
         self
     }
 
+    #[must_use]
     pub fn echo(mut self, echo: bool) -> Self {
         self.echo = Some(echo);
         self
     }
 
+    #[must_use]
     pub fn stop(mut self, stop: impl Into<Vec<String>>) -> Self {
         self.stop = Some(stop.into());
         self
     }
 
+    #[must_use]
     pub fn presence_penalty(mut self, presence_penalty: f32) -> Self {
         self.presence_penalty = Some(presence_penalty);
         self
     }
 
+    #[must_use]
     pub fn frequency_penalty(mut self, frequency_penalty: f32) -> Self {
         self.frequency_penalty = Some(frequency_penalty);
         self
     }
 
+    #[must_use]
     pub fn best_of(mut self, best_of: u16) -> Self {
         self.best_of = Some(best_of);
         self
     }
 
+    #[must_use]
     pub fn logit_bias(mut self, logit_bias: impl Into<serde_json::Value>) -> Self {
         self.logit_bias = Some(logit_bias.into());
         self
     }
 
+    #[must_use]
     pub fn user(mut self, user: impl Into<String>) -> Self {
         self.user = Some(user.into());
         self

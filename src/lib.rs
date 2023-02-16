@@ -1,8 +1,8 @@
-pub mod configs;
+pub mod types;
 
 use std::error::Error;
 
-use configs::completion::CompletionBody;
+use types::completion::CompletionBody;
 
 pub struct OpenAi {
     api_key: String,
@@ -21,7 +21,7 @@ impl OpenAi {
     ) -> Result<serde_json::Value, Box<dyn Error>> {
         let client = reqwest::Client::new();
         let response = client
-            .get("https://api.openai.com/v1/completions")
+            .post("https://api.openai.com/v1/completions")
             .header("Content-Type", "application/json")
             .bearer_auth(&self.api_key)
             .json(config.as_ref())
@@ -29,7 +29,7 @@ impl OpenAi {
             .await?;
 
         if !response.status().is_success() {
-            return Err("Request failed".into());
+            return Err(format!("Request failed: {:#?}", response.text().await?).into());
         }
 
         let response = response.json::<serde_json::Value>().await?;
