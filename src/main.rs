@@ -11,8 +11,6 @@ use types::configs::AppConfig;
 use types::git::GitDiff;
 use types::openai::OpenAi;
 
-/// Generate commit messages using `OpenAI`'s GPT-3 API
-
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
     let args: Args = Args::parse_args();
