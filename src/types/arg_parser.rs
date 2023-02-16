@@ -5,7 +5,11 @@ use clap::Parser;
 pub struct Args {
     /// The arguments to pass to the commit command
     #[clap(short, long)]
-    commit_args: Option<Vec<String>>,
+    pub commit_args: Option<Vec<String>>,
+
+    /// Set the initial configuration
+    #[clap(long)]
+    pub config: bool,
 }
 
 impl Args {
