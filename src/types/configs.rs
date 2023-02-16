@@ -2,7 +2,7 @@ use confy::ConfyError;
 use owo_colors::{OwoColorize, Stream};
 use serde::{Deserialize, Serialize};
 
-const APP_NAME: &str = env!("CARGO_PKG_NAME");
+use crate::APP_NAME;
 
 #[derive(Default, Debug, Serialize, Deserialize)]
 pub struct AppConfig {

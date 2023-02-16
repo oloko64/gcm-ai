@@ -1,3 +1,4 @@
+use once_cell::sync::Lazy;
 use owo_colors::{OwoColorize, Stream};
 use std::error::Error;
 use std::io::Write;
@@ -11,6 +12,19 @@ use types::configs::AppConfig;
 use types::git::GitDiff;
 use types::openai::OpenAi;
 
+const APP_NAME: &str = env!("CARGO_PKG_NAME");
+
+static APP_CONFIG: Lazy<AppConfig> = Lazy::new(|| {
+    AppConfig::try_get().unwrap_or_else(|_| {
+        eprintln!(
+            "{}",
+            format!("Configuration file not found, please run `{APP_NAME} --config`")
+                .if_supports_color(Stream::Stdout, OwoColorize::bright_red)
+        );
+        exit(1);
+    })
+});
+
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
     let args: Args = Args::parse_args();
@@ -20,6 +34,8 @@ async fn main() {
         let api_key = rpassword::read_password().unwrap();
         AppConfig::try_set(api_key).expect("Failed to set API key");
     }
+
+    check_config_api_key();
 
     assert_current_dir_is_git_repo()
         .await
@@ -63,34 +79,29 @@ async fn main() {
     }
 }
 
-async fn generate_commit_message(
-    config: CompletionBody,
-    git_diff: GitDiff,
-) -> Result<String, Box<dyn Error>> {
-    if git_diff.get_diff().len() > 8000 {
-        return Err("Diff is too large".into());
-    }
-
-    let Ok(app_config) = AppConfig::try_get() else {
-        println!(
+fn check_config_api_key() {
+    if APP_CONFIG.api_key.is_empty() {
+        eprintln!(
             "{}",
-            "No API key configured, please run `openai-rs --config`".if_supports_color(Stream::Stdout, OwoColorize::bright_red)
-        );
-        exit(1);
-    };
-
-    if app_config.api_key.is_empty() {
-        println!(
-            "{}",
-            "No API key configured, please run `openai-rs --config`"
+            format!("No API key configured, please run `{APP_NAME} --config`")
                 .if_supports_color(Stream::Stdout, OwoColorize::bright_red)
         );
         exit(1);
     }
+}
 
-    let openai = OpenAi::new(app_config.api_key);
-    let config = config
-        .prompt(vec![format!("Write an insightful but concise Git commit message in a complete sentence in present tense for the following diff without prefacing it with anything: {}", git_diff.get_diff())]);
+async fn generate_commit_message(
+    config: CompletionBody,
+    git_diff: GitDiff,
+) -> Result<String, Box<dyn Error>> {
+    let prompt_git_dif = format!("Write an insightful but concise Git commit message in a complete sentence in present tense for the following diff without prefacing it with anything: {}", git_diff.get_diff());
+
+    if prompt_git_dif.len() > 8000 {
+        return Err("Diff is too large".into());
+    }
+
+    let openai = OpenAi::new(&APP_CONFIG.api_key);
+    let config = config.prompt(vec![prompt_git_dif]);
 
     let data = openai.create_completion(config).await?;
 
