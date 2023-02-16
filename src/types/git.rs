@@ -1,4 +1,6 @@
-use std::{error::Error, process::Command};
+use std::error::Error;
+
+use tokio::process::Command;
 
 #[derive(Debug)]
 pub struct GitDiff {
@@ -7,10 +9,11 @@ pub struct GitDiff {
 }
 
 impl GitDiff {
-    pub fn new() -> Result<GitDiff, Box<dyn Error>> {
+    pub async fn new() -> Result<GitDiff, Box<dyn Error>> {
         let output = Command::new("git")
             .args(["diff", "--cached", "--name-only"])
-            .output()?;
+            .output()
+            .await?;
 
         if !output.status.success() {
             return Err("Failed to execute git diff --cached --name-only".into());
@@ -26,7 +29,10 @@ impl GitDiff {
 
         println!("Files staged for commit: {files:#?}");
 
-        let output = Command::new("git").args(["diff", "--cached"]).output()?;
+        let output = Command::new("git")
+            .args(["diff", "--cached"])
+            .output()
+            .await?;
 
         if !output.status.success() {
             return Err("Failed to execute git diff --cached".into());

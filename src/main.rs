@@ -1,7 +1,8 @@
-use owo_colors::OwoColorize;
+use owo_colors::{OwoColorize, Stream};
 use std::error::Error;
 use std::io::Write;
-use std::process::{exit, Command};
+use std::process::exit;
+use tokio::process::Command;
 
 mod types;
 use types::arg_parser::Args;
@@ -12,7 +13,7 @@ use types::openai::OpenAi;
 
 /// Generate commit messages using `OpenAI`'s GPT-3 API
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() {
     let args: Args = Args::parse_args();
     if args.config {
@@ -22,9 +23,11 @@ async fn main() {
         AppConfig::try_set(api_key).expect("Failed to set API key");
     }
 
-    assert_current_dir_is_git_repo().expect("Current directory is not a git repository");
+    assert_current_dir_is_git_repo()
+        .await
+        .expect("Current directory is not a git repository");
 
-    let git_diff = match GitDiff::new() {
+    let git_diff = match GitDiff::new().await {
         Ok(git_diff) => git_diff,
         Err(err) => {
             eprintln!("{err}");
@@ -42,9 +45,17 @@ async fn main() {
         .stream(false)
         .n(1);
 
+    println!(
+        "\n{}",
+        "Generating commit message...".if_supports_color(Stream::Stdout, OwoColorize::bright_blue)
+    );
+
     match generate_commit_message(config, git_diff).await {
         Ok(commit_message) => {
-            println!("\n{}", commit_message.bright_green());
+            println!(
+                "\n{}",
+                commit_message.if_supports_color(Stream::Stdout, OwoColorize::bright_green)
+            );
             std::process::exit(0);
         }
         Err(err) => {
@@ -65,7 +76,7 @@ async fn generate_commit_message(
     let Ok(app_config) = AppConfig::try_get() else {
         println!(
             "{}",
-            "No API key configured, please run `openai-rs --config`".bright_red()
+            "No API key configured, please run `openai-rs --config`".if_supports_color(Stream::Stdout, OwoColorize::bright_red)
         );
         exit(1);
     };
@@ -73,7 +84,8 @@ async fn generate_commit_message(
     if app_config.api_key.is_empty() {
         println!(
             "{}",
-            "No API key configured, please run `openai-rs --config`".bright_red()
+            "No API key configured, please run `openai-rs --config`"
+                .if_supports_color(Stream::Stdout, OwoColorize::bright_red)
         );
         exit(1);
     }
@@ -92,10 +104,11 @@ async fn generate_commit_message(
     Ok(String::from(commit_message))
 }
 
-fn assert_current_dir_is_git_repo() -> Result<(), Box<dyn Error>> {
+async fn assert_current_dir_is_git_repo() -> Result<(), Box<dyn Error>> {
     let output = Command::new("git")
         .args(["rev-parse", "--is-inside-work-tree"])
-        .output()?;
+        .output()
+        .await?;
 
     if !output.status.success() {
         return Err("Current directory is not a git repository".into());
