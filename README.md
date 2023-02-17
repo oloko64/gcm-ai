@@ -1,6 +1,8 @@
 # GCM-AI
 
-`GCM-AI` is a command-line tool that generates commit messages based on the diff of staged changes using OpenAI. It is written in Rust.
+`GCM-AI` is a command-line tool that generates commit messages based on the diff of staged changes using OpenAI.
+
+This app inspired by [aicommits](https://github.com/Nutlope/aicommits) with some tweaks and written in Rust.
 
 ## Installation
 To install GCM-AI, you will need to have Rust installed on your system. You can install Rust by following the instructions [here](https://www.rust-lang.org/tools/install).
