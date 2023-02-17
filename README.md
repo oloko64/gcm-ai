@@ -1,5 +1,7 @@
 # GCM-AI
 
+![gcm-ai](https://user-images.githubusercontent.com/49915167/219650248-0e7823d6-d2d9-44df-9645-4f4875b47db3.png)
+
 `GCM-AI` is a command-line tool that generates commit messages based on the diff of staged changes using OpenAI.
 
 This app inspired by [aicommits](https://github.com/Nutlope/aicommits) with some tweaks and written in Rust.
@@ -27,7 +29,7 @@ This will generate a commit message using OpenAI's GPT-3 language model and prin
 
 GCM-AI uses the OpenAI API to generate commit messages. To use the OpenAI API, you will need an API key. You can get an API key by signing up for OpenAI [here](https://beta.openai.com/signup/).
 
-Please note that OpenAI is currently in beta, and the API is not free. But for now when you sign up, you will get $18 of free credits to use on the API, which should be enough to generate enough commit messages  as the generated commit messages are very low cost.
+Please note that OpenAI is currently in beta, and the API is not free. But for now when you sign up, you will get $18 of free credits to use on the API, which should be enough to generate enough commit messages  as the generated commit messages are very cheap.
 
 Once you have an API key, you can configure GCM-AI to use it by running the following command:
 
