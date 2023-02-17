@@ -52,14 +52,11 @@ pub struct CompletionBody {
 
 impl CompletionBody {
     #[must_use]
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    #[must_use]
-    pub fn model(mut self, model: impl Into<String>) -> Self {
-        self.model = model.into();
-        self
+    pub fn new(model: impl Into<String>) -> Self {
+        Self {
+            model: model.into(),
+            ..Self::default()
+        }
     }
 
     #[must_use]
@@ -156,7 +153,7 @@ impl CompletionBody {
 impl Default for CompletionBody {
     fn default() -> Self {
         CompletionBody {
-            model: String::from("davinci"),
+            model: String::from("text-davinci-003"),
             prompt: None,
             suffix: None,
             max_tokens: None,
@@ -179,5 +176,38 @@ impl Default for CompletionBody {
 impl AsRef<CompletionBody> for CompletionBody {
     fn as_ref(&self) -> &CompletionBody {
         self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn test_completion_body() {
+        let body = CompletionBody::new("text-davinci-003")
+            .prompt(vec!["Hello, my name is".to_string()])
+            .max_tokens(10)
+            .temperature(0.5)
+            .top_p(1.0)
+            .n(1)
+            .stream(false)
+            .presence_penalty(0.0)
+            .frequency_penalty(0.0);
+
+        let expected = json!({
+            "model": "text-davinci-003",
+            "prompt": ["Hello, my name is"],
+            "max_tokens": 10,
+            "temperature": 0.5,
+            "top_p": 1.0,
+            "n": 1,
+            "stream": false,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0
+        });
+
+        assert_eq!(serde_json::to_value(body).unwrap(), expected);
     }
 }

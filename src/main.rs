@@ -50,8 +50,7 @@ async fn main() {
         }
     };
 
-    let config = CompletionBody::new()
-        .model("text-davinci-003")
+    let config = CompletionBody::new("text-davinci-003")
         .temperature(0.7)
         .top_p(1.0)
         .frequency_penalty(0.0)
@@ -126,7 +125,12 @@ async fn assert_current_dir_is_git_repo() -> Result<(), Box<dyn Error>> {
         .await?;
 
     if !output.status.success() {
-        return Err("Current directory is not a git repository".into());
+        eprintln!(
+            "{}",
+            "Current directory is not a git repository"
+                .if_supports_color(Stream::Stdout, OwoColorize::bright_red)
+        );
+        std::process::exit(1);
     }
     Ok(())
 }
