@@ -1,7 +1,12 @@
 [package]
 name = "gcm-ai"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
+license = "MIT"
+authors = ["OLoKo64 <reinaldorozatoj.11cg1@aleeas.com>"]
+description = "GCM-AI is a command-line tool that generates commit messages based on the diff of staged changes using OpenAI."
+categories = ["command-line-utilities"]
+repository = "https://github.com/OLoKo64/gcm-ai"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
