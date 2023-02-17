@@ -13,6 +13,7 @@ use types::git::GitDiff;
 use types::openai::OpenAi;
 
 const APP_NAME: &str = env!("CARGO_PKG_NAME");
+const PROMPT_MAX_LENGTH: usize = 8000;
 
 static APP_CONFIG: Lazy<AppConfig> = Lazy::new(|| {
     AppConfig::try_get().unwrap_or_else(|_| {
@@ -94,14 +95,20 @@ async fn generate_commit_message(
     config: CompletionBody,
     git_diff: GitDiff,
 ) -> Result<String, Box<dyn Error>> {
-    let prompt_git_dif = format!("Write an insightful but concise Git commit message in a complete sentence in present tense for the following diff without prefacing it with anything: {}", git_diff.get_diff());
+    let mut prompt_git_diff = format!("Write an insightful but concise Git commit message in a complete sentence in present tense for the following diff without prefacing it with anything: {}", git_diff.get_diff());
 
-    if prompt_git_dif.len() > 8000 {
-        return Err("Diff is too large".into());
+    if prompt_git_diff.len() > PROMPT_MAX_LENGTH {
+        eprintln!(
+            "{}",
+            format!(
+                "Diff is too large, the generated message may be not accurate."
+            )
+            .if_supports_color(Stream::Stdout, OwoColorize::bright_yellow));
+        prompt_git_diff = prompt_git_diff[..PROMPT_MAX_LENGTH].to_string();
     }
 
     let openai = OpenAi::new(&APP_CONFIG.api_key);
-    let config = config.prompt(vec![prompt_git_dif]);
+    let config = config.prompt(vec![prompt_git_diff]);
 
     let data = openai.create_completion(config).await?;
 
