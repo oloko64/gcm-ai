@@ -4,6 +4,7 @@ use tokio::process::Command;
 
 #[derive(Debug)]
 pub struct GitDiff {
+    #[allow(dead_code)]
     files: Vec<String>,
     diff: String,
 }
@@ -43,10 +44,10 @@ impl GitDiff {
         Ok(GitDiff { files, diff })
     }
 
-    #[must_use]
-    pub fn get_files(&self) -> &Vec<String> {
-        &self.files
-    }
+    // #[must_use]
+    // pub fn get_files(&self) -> &Vec<String> {
+    //     &self.files
+    // }
 
     #[must_use]
     pub fn get_diff(&self) -> &String {

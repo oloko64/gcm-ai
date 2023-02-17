@@ -100,10 +100,9 @@ async fn generate_commit_message(
     if prompt_git_diff.len() > PROMPT_MAX_LENGTH {
         eprintln!(
             "{}",
-            format!(
-                "Diff is too large, the generated message may be not accurate."
-            )
-            .if_supports_color(Stream::Stdout, OwoColorize::bright_yellow));
+            "Diff is too large, the generated message may be not accurate."
+                .if_supports_color(Stream::Stdout, OwoColorize::bright_yellow)
+        );
         prompt_git_diff = prompt_git_diff[..PROMPT_MAX_LENGTH].to_string();
     }
 

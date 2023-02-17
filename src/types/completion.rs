@@ -68,11 +68,11 @@ impl CompletionBody {
         self
     }
 
-    #[must_use]
-    pub fn suffix(mut self, suffix: impl Into<String>) -> Self {
-        self.suffix = Some(suffix.into());
-        self
-    }
+    // #[must_use]
+    // pub fn suffix(mut self, suffix: impl Into<String>) -> Self {
+    //     self.suffix = Some(suffix.into());
+    //     self
+    // }
 
     #[must_use]
     pub fn max_tokens(mut self, max_tokens: u16) -> Self {
@@ -104,23 +104,23 @@ impl CompletionBody {
         self
     }
 
-    #[must_use]
-    pub fn logprobs(mut self, logprobs: u16) -> Self {
-        self.logprobs = Some(logprobs);
-        self
-    }
+    // #[must_use]
+    // pub fn logprobs(mut self, logprobs: u16) -> Self {
+    //     self.logprobs = Some(logprobs);
+    //     self
+    // }
 
-    #[must_use]
-    pub fn echo(mut self, echo: bool) -> Self {
-        self.echo = Some(echo);
-        self
-    }
+    // #[must_use]
+    // pub fn echo(mut self, echo: bool) -> Self {
+    //     self.echo = Some(echo);
+    //     self
+    // }
 
-    #[must_use]
-    pub fn stop(mut self, stop: impl Into<Vec<String>>) -> Self {
-        self.stop = Some(stop.into());
-        self
-    }
+    // #[must_use]
+    // pub fn stop(mut self, stop: impl Into<Vec<String>>) -> Self {
+    //     self.stop = Some(stop.into());
+    //     self
+    // }
 
     #[must_use]
     pub fn presence_penalty(mut self, presence_penalty: f32) -> Self {
@@ -134,23 +134,23 @@ impl CompletionBody {
         self
     }
 
-    #[must_use]
-    pub fn best_of(mut self, best_of: u16) -> Self {
-        self.best_of = Some(best_of);
-        self
-    }
+    // #[must_use]
+    // pub fn best_of(mut self, best_of: u16) -> Self {
+    //     self.best_of = Some(best_of);
+    //     self
+    // }
 
-    #[must_use]
-    pub fn logit_bias(mut self, logit_bias: impl Into<serde_json::Value>) -> Self {
-        self.logit_bias = Some(logit_bias.into());
-        self
-    }
+    // #[must_use]
+    // pub fn logit_bias(mut self, logit_bias: impl Into<serde_json::Value>) -> Self {
+    //     self.logit_bias = Some(logit_bias.into());
+    //     self
+    // }
 
-    #[must_use]
-    pub fn user(mut self, user: impl Into<String>) -> Self {
-        self.user = Some(user.into());
-        self
-    }
+    // #[must_use]
+    // pub fn user(mut self, user: impl Into<String>) -> Self {
+    //     self.user = Some(user.into());
+    //     self
+    // }
 }
 
 impl Default for CompletionBody {

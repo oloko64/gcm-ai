@@ -14,10 +14,10 @@ impl OpenAi {
         }
     }
 
-    #[must_use]
-    pub fn get_api_key(&self) -> &String {
-        &self.api_key
-    }
+    // #[must_use]
+    // pub fn get_api_key(&self) -> &String {
+    //     &self.api_key
+    // }
 
     pub async fn create_completion(
         &self,
