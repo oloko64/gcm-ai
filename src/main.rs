@@ -50,21 +50,12 @@ async fn main() {
         }
     };
 
-    let config = CompletionBody::new("text-davinci-003")
-        .temperature(0.7)
-        .top_p(1.0)
-        .frequency_penalty(0.0)
-        .presence_penalty(0.0)
-        .max_tokens(200)
-        .stream(false)
-        .n(1);
-
     println!(
         "\n{}",
         "Generating commit message...".if_supports_color(Stream::Stdout, OwoColorize::bright_blue)
     );
 
-    match generate_commit_message(config, git_diff).await {
+    match generate_commit_message(git_diff).await {
         Ok(commit_message) => {
             println!(
                 "\n{}",
@@ -90,10 +81,7 @@ fn check_config_api_key() {
     }
 }
 
-async fn generate_commit_message(
-    config: CompletionBody,
-    git_diff: GitDiff,
-) -> Result<String, Box<dyn Error>> {
+async fn generate_commit_message(git_diff: GitDiff) -> Result<String, Box<dyn Error>> {
     let mut prompt_git_diff = format!("Write an insightful but concise Git commit message in a complete sentence in present tense for the following diff without prefacing it with anything: {}", git_diff.get_diff());
 
     if prompt_git_diff.len() > PROMPT_MAX_LENGTH {
@@ -106,7 +94,16 @@ async fn generate_commit_message(
     }
 
     let openai = OpenAi::new(&APP_CONFIG.api_key);
-    let config = config.prompt(vec![prompt_git_diff]);
+    let config = CompletionBody::builder("text-davinci-003")
+        .prompt(vec![prompt_git_diff])
+        .temperature(0.7)
+        .top_p(1.0)
+        .frequency_penalty(0.0)
+        .presence_penalty(0.0)
+        .max_tokens(200)
+        .stream(false)
+        .n(1)
+        .build();
 
     let data = openai.create_completion(config).await?;
 
