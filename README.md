@@ -1,5 +1,7 @@
 # GCM-AI
 
+[![Rust](https://github.com/OLoKo64/gcm-ai/actions/workflows/rust.yml/badge.svg)](https://github.com/OLoKo64/gcm-ai/actions/workflows/rust.yml)
+
 ![gcm-ai](https://user-images.githubusercontent.com/49915167/219650248-0e7823d6-d2d9-44df-9645-4f4875b47db3.png)
 
 `GCM-AI` is a command-line tool that generates commit messages based on the diff of staged changes using OpenAI.
