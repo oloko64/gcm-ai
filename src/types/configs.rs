@@ -1,5 +1,5 @@
 use confy::ConfyError;
-use owo_colors::{OwoColorize, Stream};
+use owo_colors::OwoColorize;
 use serde::{Deserialize, Serialize};
 
 use crate::APP_NAME;
@@ -23,7 +23,7 @@ impl AppConfig {
                 "Successfully set the API key at {}\n",
                 confy::get_configuration_file_path(APP_NAME, None)?.to_string_lossy()
             )
-            .if_supports_color(Stream::Stdout, OwoColorize::bright_green)
+            .green()
         );
 
         Ok(config)

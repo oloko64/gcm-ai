@@ -1,5 +1,5 @@
 use once_cell::sync::Lazy;
-use owo_colors::{OwoColorize, Stream};
+use owo_colors::OwoColorize;
 use std::error::Error;
 use std::io::Write;
 use std::process::exit;
@@ -19,8 +19,7 @@ static APP_CONFIG: Lazy<AppConfig> = Lazy::new(|| {
     AppConfig::try_get().unwrap_or_else(|_| {
         eprintln!(
             "{}",
-            format!("Configuration file not found, please run `{APP_NAME} --config`")
-                .if_supports_color(Stream::Stdout, OwoColorize::bright_red)
+            format!("Configuration file not found, please run `{APP_NAME} --config`").red()
         );
         exit(1);
     })
@@ -50,17 +49,11 @@ async fn main() {
         }
     };
 
-    println!(
-        "\n{}",
-        "Generating commit message...".if_supports_color(Stream::Stdout, OwoColorize::bright_blue)
-    );
+    println!("\n{}", "Generating commit message...".blue());
 
     match generate_commit_message(git_diff).await {
         Ok(commit_message) => {
-            println!(
-                "\n{}",
-                commit_message.if_supports_color(Stream::Stdout, OwoColorize::bright_green)
-            );
+            println!("\n{}", commit_message.green());
             std::process::exit(0);
         }
         Err(err) => {
@@ -74,8 +67,7 @@ fn check_config_api_key() {
     if APP_CONFIG.api_key.is_empty() {
         eprintln!(
             "{}",
-            format!("No API key configured, please run `{APP_NAME} --config`")
-                .if_supports_color(Stream::Stdout, OwoColorize::bright_red)
+            format!("No API key configured, please run `{APP_NAME} --config`").red()
         );
         exit(1);
     }
@@ -87,8 +79,7 @@ async fn generate_commit_message(git_diff: GitDiff) -> Result<String, Box<dyn Er
     if prompt_git_diff.len() > PROMPT_MAX_LENGTH {
         eprintln!(
             "{}",
-            "Diff is too large, the generated message may be not accurate."
-                .if_supports_color(Stream::Stdout, OwoColorize::bright_yellow)
+            "Diff is too large, the generated message may be not accurate.".yellow()
         );
         prompt_git_diff = prompt_git_diff[..PROMPT_MAX_LENGTH].to_string();
     }
@@ -122,11 +113,7 @@ async fn assert_current_dir_is_git_repo() -> Result<(), Box<dyn Error>> {
         .await?;
 
     if !output.status.success() {
-        eprintln!(
-            "{}",
-            "Current directory is not a git repository"
-                .if_supports_color(Stream::Stdout, OwoColorize::bright_red)
-        );
+        eprintln!("{}", "Current directory is not a git repository".red());
         std::process::exit(1);
     }
     Ok(())
