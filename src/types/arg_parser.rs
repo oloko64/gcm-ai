@@ -5,7 +5,7 @@ use clap::Parser;
 #[command(author, version, about, long_about = None)]
 pub struct Args {
     /// Set the initial configuration
-    #[clap(long)]
+    #[arg(long)]
     pub config: bool,
 }
 
